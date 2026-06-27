@@ -3,11 +3,14 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Brain, GitBranch, Link2, Sparkles } from "lucide-react";
 import { About } from "../components/About";
+import { Background } from "../components/Background";
 import { Hero } from "../components/hero";
 import { Navbar } from "../components/navbar";
 import { SectionTransition } from "../components/section-transition";
 import { SocialProof } from "../components/SocialProof";
 import { TiltCard } from "../components/tilt-card";
+
+export { motionPresets, fadeIn, fadeUp, fadeLeft, fadeRight, blurReveal, scaleReveal, staggerContainer, staggerItem, textReveal, cardReveal, buttonHover, magneticHover, floatingAnimation, scrollReveal, useMouseParallax, useMagneticHover, useFloatingAnimation } from "../lib/animations";
 
 const skillGroups = [
   { title: "Machine Learning", items: ["PyTorch", "Scikit-learn", "XGBoost", "LightGBM"] },
@@ -66,13 +69,22 @@ const githubStats = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#05070A] text-white">
+    <div className="min-h-screen bg-[var(--color-bg)] text-white">
       <main className="mx-auto flex max-w-7xl flex-col px-4 py-4 sm:px-6 lg:px-8">
         <Navbar />
 
-        <Hero />
-        <SocialProof />
-        <About />
+        <div className="relative">
+          <Background className="rounded-[2rem]" />
+          <Hero />
+        </div>
+        <div className="relative">
+          <Background className="rounded-[2rem]" intensity="soft" />
+          <SocialProof />
+        </div>
+        <div className="relative">
+          <Background className="rounded-[2rem]" intensity="subtle" />
+          <About />
+        </div>
 
         <SectionTransition>
           <section className="section-spacing">
