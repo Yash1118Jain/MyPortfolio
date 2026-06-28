@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight, Brain, GitBranch, Link2, Sparkles } from "lucide-react";
-import { About } from "../components/About";
 import { Background } from "../components/Background";
+import { ProjectCaseStudy } from "../components/ProjectCaseStudy";
 import { Hero } from "../components/hero";
 import { Navbar } from "../components/navbar";
 import { SectionTransition } from "../components/section-transition";
@@ -23,35 +23,8 @@ const skillGroups = [
   { title: "Design", items: ["Figma", "Design Systems", "UI Strategy", "Prototyping"] },
 ];
 
-const featuredProjects = [
-  {
-    title: "Panic Disorder Detection",
-    description:
-      "A machine learning system for identifying early risk signals from behavioral and physiological data with high interpretability.",
-    problem: "Clinicians needed a reliable way to surface early-stage risk patterns without relying on slow manual review.",
-    solution: "Built a robust binary classification pipeline with careful feature engineering, evaluation, and explainability layers.",
-    stack: ["Python", "Scikit-learn", "Pandas", "SHAP"],
-    metrics: ["92% accuracy", "8x faster review"],
-  },
-  {
-    title: "Flood Detection with LightGBM",
-    description:
-      "A production-minded forecasting model designed to detect flood conditions using tabular and environmental signals.",
-    problem: "Regional monitoring systems lacked a fast and dependable way to detect risk spikes before escalation.",
-    solution: "Deployed a gradient-boosted model tuned for precision and latency, with a lightweight inference layer.",
-    stack: ["LightGBM", "Python", "SQL", "AWS"],
-    metrics: ["87% precision", "< 2s inference"],
-  },
-  {
-    title: "AI Collaborative Whiteboard",
-    description:
-      "A realtime collaborative workspace that merges generative AI with structured team workflows for planning and ideation.",
-    problem: "Teams were fragmented across tools and needed a shared system that could turn ideas into artifacts instantly.",
-    solution: "Created a smooth, multi-user experience with AI-driven suggestions, task extraction, and streaming responses.",
-    stack: ["Next.js", "TypeScript", "OpenAI", "Postgres"],
-    metrics: ["40% faster planning", "3x engagement"],
-  },
-];
+// Import project data
+import { projects } from "../data/projects";
 
 const timeline = [
   { year: "2024", title: "Senior AI Engineer", detail: "Leading applied ML systems and productized AI experiences for high-growth teams." },
@@ -77,14 +50,20 @@ export default function Home() {
           <Background className="rounded-[2rem]" />
           <Hero />
         </div>
-        <div className="relative">
-          <Background className="rounded-[2rem]" intensity="soft" />
-          <SocialProof />
-        </div>
-        <div className="relative">
-          <Background className="rounded-[2rem]" intensity="subtle" />
-          <About />
-        </div>
+
+        {/* Case Studies Section - using our new editorial system */}
+        <SectionTransition>
+          <section className="section-spacing">
+            <div className="mb-6">
+              <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Case Studies</p>
+              <h2 className="mt-2 text-3xl font-semibold text-white">Project Portfolio</h2>
+            </div>
+            {/* Render each project as a full case study */}
+            {projects.map((project) => (
+              <ProjectCaseStudy key={project.id} project={project} />
+            ))}
+          </section>
+        </SectionTransition>
 
         <SectionTransition>
           <section className="section-spacing">
@@ -99,33 +78,6 @@ export default function Home() {
                   <div className="mt-3 font-semibold text-white">{item.title}</div>
                   <p className="mt-2 text-sm leading-7 text-zinc-400">{item.detail}</p>
                 </div>
-              ))}
-            </div>
-          </section>
-        </SectionTransition>
-
-        <SectionTransition>
-          <section className="section-spacing">
-            <div className="mb-6 flex items-end justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Skills</p>
-                <h2 className="mt-2 text-3xl font-semibold text-white">A toolkit shaped for modern AI products.</h2>
-              </div>
-            </div>
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-              {skillGroups.map((group) => (
-                <TiltCard key={group.title}>
-                  <div className="relative z-10">
-                    <h3 className="text-lg font-semibold text-white">{group.title}</h3>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {group.items.map((item) => (
-                        <span key={item} className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-sm text-zinc-300">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </TiltCard>
               ))}
             </div>
           </section>
@@ -148,63 +100,12 @@ export default function Home() {
         </SectionTransition>
 
         <SectionTransition>
-          <section id="work" className="section-spacing">
-            <div className="mb-6">
-              <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Featured Projects</p>
-              <h2 className="mt-2 text-3xl font-semibold text-white">Selected work that blends rigor with clarity.</h2>
-            </div>
-            <div className="space-y-6">
-              {featuredProjects.map((project, index) => (
-                <TiltCard key={project.title}>
-                  <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-                    <div className={`h-56 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(135deg,_rgba(59,130,246,0.22),_rgba(255,255,255,0.04)_40%,_rgba(96,165,250,0.12)_100%)] p-6 ${index % 2 === 0 ? "lg:order-1" : "lg:order-2"}`}>
-                      <div className="flex h-full flex-col justify-between">
-                        <div className="text-sm text-zinc-400">Case study 0{index + 1}</div>
-                        <div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-zinc-200">
-                          {project.title}
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`space-y-4 ${index % 2 === 0 ? "lg:order-2" : "lg:order-1"}`}>
-                      <div className="flex items-center gap-2 text-sm text-blue-300">
-                        <Sparkles size={14} />
-                        {project.description}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white">Problem</div>
-                        <p className="mt-1 text-sm leading-7 text-zinc-400">{project.problem}</p>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white">Solution</div>
-                        <p className="mt-1 text-sm leading-7 text-zinc-400">{project.solution}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {project.stack.map((tech) => (
-                          <span key={tech} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-300">{tech}</span>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-3">
-                        {project.metrics.map((metric) => (
-                          <div key={metric} className="rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-2 text-sm text-blue-100">{metric}</div>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-3 pt-2">
-                        <a href="#" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200 transition hover:border-blue-400/40 hover:text-white">GitHub <GitBranch size={14} /></a>
-                        <a href="#" className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-400">Live Demo <ArrowUpRight size={14} /></a>
-                      </div>
-                    </div>
-                  </div>
-                </TiltCard>
-              ))}
-            </div>
-          </section>
-        </SectionTransition>
-
-        <SectionTransition>
-          <section id="experience" className="section-spacing grid gap-6 lg:grid-cols-[1fr_0.8fr]">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-7">
-              <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Experience</p>
-              <h2 className="mt-2 text-3xl font-semibold text-white">Leadership, research, and product craftsmanship.</h2>
+          <section className="mt-16 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-7">
+            <div className="mb-6 flex items-end justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Experience</p>
+                <h2 className="mt-2 text-3xl font-semibold text-white">Leadership, research, and product craftsmanship.</h2>
+              </div>
             </div>
             <div className="section-shell p-7">
               <div className="space-y-4 text-sm leading-7 text-zinc-400">

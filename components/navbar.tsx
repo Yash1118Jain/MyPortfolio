@@ -1,28 +1,39 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const links = [
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Work" },
-  { href: "#experience", label: "Experience" },
-  { href: "#contact", label: "Contact" },
-];
+import { useEffect, useState } from 'react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+} from 'framer-motion';
+import { GitBranch, linkedin } from 'lucide-react';
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const scale = useSpring(useTransform(scrollY, [0, 120], [1, 0.96]), {
-    stiffness: 180,
-    damping: 24,
-  });
+  // Handle scroll direction for hiding/showing navbar
+  useEffect(() => {
+    let lastScrollY = window.pageYOffset;
+    const ticking = false;
 
-  const yOffset = useTransform(scrollY, [0, 120], [0, -6]);
+    const updateScroll = () => {
+      const currentScrollY = window.pageYOffset;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(currentScrollY < lastScrollY ? false : true);
+          lastScrollY = currentScrollY;
+        });
+      }
+    };
 
+    window.addEventListener('scroll', updateScroll);
+    return () => window.removeEventListener('scroll', updateScroll);
+  }, []);
+
+  // Determine active section based on scroll position
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -34,133 +45,240 @@ export function Navbar() {
           setActiveSection(visible.target.id);
         }
       },
-      { threshold: [0.3, 0.6], rootMargin: "-20% 0px -40% 0px" },
+      { threshold: [0.3, 0.6], rootMargin: '-20% 0px -40% 0px' }
     );
 
-    const sections = document.querySelectorAll<HTMLElement>("section[id]");
+    const sections = document.querySelectorAll<HTMLElement>('section[id]');
     sections.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
   }, []);
 
+  const navLinks = [
+    { href: '#projects', label: 'Projects' },
+    { href: '#leadership', label: 'Leadership' },
+    { href: '#research', label: 'Research' },
+    { href: '#skills', label: 'Skills' },
+    { href: '#contact', label: 'Contact' },
+  ];
+
+  const { scrollY } = useScroll();
+  const navY = useSpring(
+    useTransform(scrollY, [0, 100, 200], [0, 0, -100]),
+    {
+      stiffness: 180,
+      damping: 22,
+    }
+  );
+
   return (
     <motion.header
-      style={{ scale, y: yOffset }}
-      className="sticky top-4 z-50 mb-6 px-4 sm:px-6 lg:px-8"
+      style={{ y: navY }}
+      className="fixed top-0 z-50 w-full pointer-events-none"
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-white/8 px-3 py-3 shadow-soft backdrop-blur-2xl sm:px-5">
-        <a href="#" className="flex items-center gap-3 text-sm font-medium text-zinc-200">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-300">
-            YJ
-          </span>
-          <span className="hidden sm:inline">Yash Jain</span>
-        </a>
-
-        <nav className="hidden flex-1 items-center justify-center gap-7 md:flex">
-          {links.map((link) => {
-            const isActive = activeSection === link.href.replace("#", "");
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                className="group relative px-1 py-2 text-sm font-medium text-zinc-400 transition hover:text-white"
-              >
-                <span>{link.label}</span>
-                <span
-                  className={`absolute bottom-0 left-0 h-[1px] rounded-full bg-blue-400 transition-all duration-300 ${
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                />
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <a
-            href="/resume.pdf"
-            className="hidden rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm font-semibold text-blue-200 transition hover:border-blue-400/50 hover:bg-blue-500/20 hover:text-white sm:inline-flex"
-          >
-            Resume
-          </a>
-
-          <button
-            type="button"
-            aria-label="Toggle navigation"
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-200 transition hover:border-blue-400/40 hover:text-white md:hidden"
-          >
-            <motion.span
-              animate={isOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -4 }}
-              transition={{ type: "spring", stiffness: 220, damping: 18 }}
-              className="absolute h-[1.5px] w-5 rounded-full bg-current"
-            />
-            <motion.span
-              animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-              transition={{ duration: 0.2 }}
-              className="absolute h-[1.5px] w-5 rounded-full bg-current"
-            />
-            <motion.span
-              animate={isOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 4 }}
-              transition={{ type: "spring", stiffness: 220, damping: 18 }}
-              className="absolute h-[1.5px] w-5 rounded-full bg-current"
-            />
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ type: "spring", stiffness: 220, damping: 24 }}
-            className="fixed inset-0 z-40 flex items-center justify-center bg-[#05070A]/95 px-6 py-10 backdrop-blur-2xl md:hidden"
-          >
-            <div className="w-full max-w-sm rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-6 shadow-strong">
-              <div className="mb-8 flex items-center justify-between">
-                <div className="text-sm font-semibold tracking-[0.28em] text-zinc-400 uppercase">Navigate</div>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-200"
-                >
-                  <X size={18} />
-                </button>
+      <div className="pointer-events-all mx-auto max-w-[1400px]">
+        <div className="border-b border-white/10 bg-white/[0.06] backdrop-blur-xl">
+          <div className="flex h-[72px] items-center justify-between gap-8 px-6 sm:px-8 lg:px-10">
+            {/* Left side: Logo and name */}
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.08] text-sm font-semibold text-white">
+                YJ
               </div>
-              <div className="space-y-3">
-                {links.map((link) => {
-                  const isActive = activeSection === link.href.replace("#", "");
-                  return (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center justify-between rounded-2xl border px-4 py-4 text-base font-medium transition ${
+              <span className="hidden text-sm font-medium text-zinc-100 sm:inline">
+                Yash Jain
+              </span>
+            </div>
+
+            {/* Center: Navigation links */}
+            <nav className="hidden flex-1 items-center justify-center gap-1 md:flex">
+              {navLinks.map((link) => {
+                const isActive =
+                  activeSection === link.href.replace('#', '') ||
+                  (activeSection === '' && link.href === '#projects'); // Default to projects
+
+                return (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    className="relative flex items-center px-4 py-2 text-sm font-medium text-zinc-400 transition-all duration-300 hover:text-zinc-100"
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <span className="relative z-10">{link.label}</span>
+                    {/* Animated blue pill indicator */}
+                    <motion.span
+                      layoutId={`active-indicator-${link.href}`}
+                      initial={{ width: 0, left: '50%' }}
+                      animate={
                         isActive
-                          ? "border-blue-400/30 bg-blue-500/10 text-white"
-                          : "border-white/10 bg-white/5 text-zinc-300 hover:border-blue-400/30 hover:text-white"
-                      }`}
-                    >
-                      <span>{link.label}</span>
-                      <span className="text-sm text-zinc-500">↗</span>
-                    </a>
-                  );
-                })}
+                          ? { width: '100%', left: 0 }
+                          : { width: 0, left: '50%' }
+                      }
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className="absolute left-0 bottom-0 h-0.5 bg-blue-500/70"
+                    />
+                  </motion.a>
+                );
+              })}
+            </nav>
+
+            {/* Right side: Buttons and icons */}
+            <div className="flex items-center gap-4">
+              {/* Resume button */}
+              <motion.a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] px-4 text-sm font-medium text-zinc-100 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                whileTap={{ scale: 0.97 }}
+              >
+                Resume
+              </motion.a>
+
+              {/* Desktop: GitHub and LinkedIn icons */}
+              <div className="hidden md:flex items-center gap-2">
+                <motion.a
+                  href="https://github.com/yourusername"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] text-zinc-400 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <GitBranch className="h-5 w-5" />
+                </motion.a>
+
+                <motion.a
+                  href="https://linkedin.com/in/yourusername"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] text-zinc-400 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <linkedin className="h-5 w-5" />
+                </motion.a>
               </div>
+
+              {/* Mobile: Hamburger menu button */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Open menu"
+                className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] p-1 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+              >
+                {/* Animated hamburger to X */}
+                <motion.span
+                  display="block"
+                  width="18"
+                  height="2"
+                  bg="currentColor"
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{
+                    rotate: isMenuOpen ? 45 : 0,
+                    y: isMenuOpen ? 6 : 0,
+                  }}
+                />
+                <motion.span
+                  display="block"
+                  width="18"
+                  height="2"
+                  bg="currentColor"
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{ marginTop: 2, opacity: isMenuOpen ? 0 : 1 }}
+                />
+                <motion.span
+                  display="block"
+                  width="18"
+                  height="2"
+                  bg="currentColor"
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{ marginTop: 2, rotate: isMenuOpen ? -45 : 0, y: isMenuOpen ? -6 : 0 }}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="fixed inset-0 z-40 flex items-center justify-center bg-black/[0.8] backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              className="relative w-full max-w-[260px] space-y-6"
+            >
+              {/* Mobile nav links */}
+              {navLinks.map((link) => {
+                const isActive =
+                  activeSection === link.href.replace('#', '') ||
+                  (activeSection === '' && link.href === '#projects');
+
+                return (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    className="block w-full text-center py-3 px-4 rounded-xl border border-white/10 bg-white/[0.08] text-lg font-medium text-zinc-100 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="relative z-0">{link.label}</span>
+                    {/* Active indicator for mobile */}
+                    <motion.span
+                      layoutId={`mobile-active-${link.href}`}
+                      initial={{ width: 0 }}
+                      animate={isActive ? { width: '100%' } : { width: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="absolute left-0 bottom-0 h-0.5 bg-blue-500/70"
+                    />
+                  </motion.a>
+                );
+              })}
+
+              {/* Mobile: Resume button */}
               <a
                 href="/resume.pdf"
-                onClick={() => setIsOpen(false)}
-                className="mt-6 inline-flex w-full items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-sm font-semibold text-blue-200 transition hover:bg-blue-500/20 hover:text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center py-3 px-4 rounded-xl border border-white/10 bg-white/[0.08] text-lg font-medium text-zinc-100 transaction-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                whileTap={{ scale: 0.95 }}
               >
-                Download Resume
+                Resume
               </a>
-            </div>
+
+              {/* Mobile: Social icons */}
+              <div className="flex justify-center gap-4">
+                <motion.a
+                  href="https://github.com/yourusername"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] text-zinc-400 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <GitBranch className="h-5 w-5" />
+                </motion.a>
+
+                <motion.a
+                  href="https://linkedin.com/in/yourusername"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] text-zinc-400 transition-all duration-300 hover:text-white hover:bg-white/[0.12]"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <linkedin className="h-5 w-5" />
+                </motion.a>
+              </div>
+            </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </div>
     </motion.header>
   );
 }
