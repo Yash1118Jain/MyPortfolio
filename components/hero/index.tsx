@@ -1,82 +1,4 @@
-"use client";
-
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, FileText, Sparkles } from "lucide-react";
-import { Background } from "./Background";
-import { buttonHover, useMagneticHover, useMouseParallax } from "../lib/animations";
-
-const headlineLines = ["Building intelligence,", "not just software."];
-const metrics = [
-  { label: "Research", value: "1", subtitle: "Publication" },
-  { label: "Leadership", value: "4", subtitle: "Positions" },
-  { label: "Projects", value: "12+", subtitle: "ML + AI" },
-];
-
-export function Hero() {
-  const { scrollY } = useScroll();
-  const heroScale = useTransform(scrollY, [0, 220], [1, 0.96]);
-  const heroOpacity = useTransform(scrollY, [0, 220], [1, 0.74]);
-  const heroY = useTransform(scrollY, [0, 220], [0, 16]);
-
-  const { motionStyle: buttonMotionStyle, onPointerMove: onButtonPointerMove, onPointerLeave: onButtonPointerLeave } = useMagneticHover({
-    strength: 0.2,
-    scale: 1.01,
-  });
-
-  const { motionStyle: cardMotionStyle, onPointerMove: onCardPointerMove, onPointerLeave: onCardPointerLeave } = useMouseParallax({
-    xRange: 6,
-    yRange: 6,
-    scale: 1.01,
-  });
-
-  return (
-    <motion.section
-      id="home"
-      style={{ scale: heroScale, opacity: heroOpacity, y: heroY }}
-      className="relative isolate min-h-screen overflow-hidden rounded-[2rem] border border-white/10 px-6 py-8 shadow-strong sm:px-8 sm:py-10 lg:min-h-[calc(100vh-2rem)] lg:px-12 lg:py-14"
-    >
-      <Background className="rounded-[2rem]" intensity="subtle" />
-
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col justify-center gap-12 lg:min-h-[calc(100vh-5rem)] lg:flex-row lg:items-center lg:gap-16">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-3xl flex-1"
-        >
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(10px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-            className="mb-6 flex items-center gap-2 text-[0.68rem] font-medium uppercase tracking-[0.34em] text-zinc-500"
-          >
-            <Sparkles size={12} className="text-zinc-400" />
-            AI Engineer • Data Science • Machine Learning
-          </motion.div>
-
-          <div className="space-y-3">
-            {headlineLines.map((line, index) => (
-              <motion.h1
-                key={line}
-                initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.9, delay: 0.16 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                className="max-w-4xl text-[clamp(3rem,6.4vw,6.8rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-white"
-              >
-                {line}
-              </motion.h1>
-            ))}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.34 }}
-            className="mt-7 max-w-2xl text-base leading-8 text-zinc-400 sm:text-lg"
-          >
-            I build machine learning systems, intelligent software, and AI products that solve practical problems with clarity and care.
-            My work sits at the intersection of research, product thinking, and execution.
-          </motion.p>
+</motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -163,16 +85,16 @@ export function Hero() {
               </div>
 
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {metrics.map((item) => (
+                {personal.techStack.map((tool) => (
                   <motion.div
-                    key={item.label}
+                    key={tool}
                     whileHover={{ y: -3, scale: 1.01, borderColor: "rgba(59,130,246,0.24)" }}
                     transition={{ type: "spring", stiffness: 220, damping: 20 }}
                     className="rounded-[1rem] border border-white/10 bg-white/[0.04] p-3 backdrop-blur"
                   >
-                    <div className="text-[0.58rem] uppercase tracking-[0.24em] text-zinc-500">{item.label}</div>
-                    <div className="mt-2 text-lg font-semibold text-zinc-100">{item.value}</div>
-                    <div className="mt-1 text-[0.68rem] text-zinc-500">{item.subtitle}</div>
+                    <div className="text-[0.58rem] uppercase tracking-[0.24em] text-zinc-500">{tool}</div>
+                    <div className="mt-2 text-xl font-semibold text-zinc-100">1</div>
+                    <div className="mt-1 text-[0.68rem] text-zinc-500"/>
                   </motion.div>
                 ))}
               </div>

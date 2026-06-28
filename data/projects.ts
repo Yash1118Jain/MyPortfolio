@@ -1,23 +1,4 @@
-export interface Project {
-  id: string;
-  caseNumber: string;
-  title: string;
-  impact: string; // one sentence summary
-  narrativeIntroduction: string;
-  story: {
-    problem: string;
-    research: string;
-    approach: string;
-    pipeline: string;
-    architecture: string;
-    results: string;
-    lessonsLearned: string;
-  };
-  techStack: string[];
-  metrics: { label: string; value: string }[];
-  buttons: { label: string; href: string; external?: boolean }[];
-  styleVariant: 'hydroalert' | 'panic' | 'doodlex' | 'selfhealing' | 'gaming';
-}
+import { Project } from '../types/project';
 
 export const projects: Project[] = [
   {
@@ -29,7 +10,7 @@ export const projects: Project[] = [
     story: {
       problem: 'Flood prediction systems suffered from high false positive rates and slow response times, relying on outdated models that couldn\'t account for urban drainage dynamics or climate change impacts.',
       research: 'We analyzed a decade of hydrological sensor data from the IndoFlood dataset, correlating rainfall, river levels, soil moisture, and atmospheric pressure with historical flood events to identify predictive patterns.',
-      approach: 'We engineered a gradient-boosted decision tree pipeline using LightGBM, incorporating domain-specific hydrological features like the Standardized Precipitation Index and Antecedent Moisture Condition to improve model accuracy.',
+      approach: 'We engineered a gradient-boosted decision tree pipeline using LightGBM, incorporating domainspecific hydrological features like the Standardized Precipitation Index and Antecedent Moisture Condition to improve model accuracy.',
       pipeline: 'Data flows from IoT sensors through a Kafka streaming platform, where it undergoes real-time validation and feature enrichment before being fed into the LightGBM model for inference.',
       architecture: 'A microservices architecture separates data ingestion, feature engineering, model inference, and alert generation, allowing each component to scale independently based on demand.',
       results: 'The system achieved 92% precision on the IndoFlood benchmark, reducing false alarms by 65% compared to legacy systems while providing critical early warnings for 2.3 million people across three major river basins.',
@@ -71,7 +52,7 @@ export const projects: Project[] = [
     story: {
       problem: 'Existing mental health monitoring tools relied on self-reported surveys or invasive clinical measurements, missing the critical window for preventive intervention during the prodromal phase of panic attacks.',
       research: 'We studied 2,000+ hours of longitudinal wearable data from panic disorder patients, identifying specific biomarkers in electrodermal activity and heart rate that consistently preceded self-reported anxiety spikes.',
-      approach: 'Using a hybrid CNN-LSTM architecture, we modeled temporal dependencies in multimodal sensor data while incorporating circadian rhythms and activity context to reduce false positives.',
+      approach: 'Using a hybrid CNNLSTM architecture, we modeled temporal dependencies in multimodal sensor data while incorporating circadian rhythms and activity context to reduce false positives.',
       pipeline: 'Raw sensor signals pass through a preprocessing pipeline that removes motion artifacts and normalizes for individual baselines before feature extraction and temporal sequence modeling.',
       architecture: 'The system employs edge computing on wearable devices for initial signal processing, with cloud-based model refinement happening during nightly syncs to preserve battery life and privacy.',
       results: 'Our model achieved 89% precision and 83% recall in detecting pre-panic states, providing an average of 22 minutes advance warning for intervention through guided breathing exercises or therapist notifications.',
@@ -113,8 +94,8 @@ export const projects: Project[] = [
       problem: 'Traditional digital whiteboards treated ink as passive strokes, missing opportunities to interpret user intent and provide contextual assistance during brainstorming sessions.',
       research: 'We conducted 50+ hours of contextual inquiry with product designers, identifying common pain points in translating rough sketches to polished concepts and the cognitive load of switching between ideation and refinement modes.',
       approach: 'Using a multimodal transformer architecture, we aligned vectorized sketch representations with natural language descriptions to enable bidirectional understanding between drawing and text.',
-      pipeline: 'Strokes are captured as Bezier curves, converted to a sequential representation, and processed through a vision-language model that generates contextual suggestions based on the current canvas state.',
-      architecture: 'A conflict-free replicated data type (CRDT) ensures real-time convergence of canvas states across clients, while the AI suggestion service operates as a separate microservice to maintain responsiveness.',
+      pipeline: 'Strokes are captured as Bezier curves, converted to a sequential representation, and processed through a visionlanguage model that generates contextual suggestions based on the current canvas state.',
+      architecture: 'A conflict-replicated data type (CRDT) ensures realtime convergence of canvas states across clients, while the AI suggestion service operates as a separate microservice to maintain responsiveness.',
       results: 'Teams using DoodleX completed concept exploration 40% faster with 25% more unique ideas generated per session, according to a controlled study with 12 product teams over six weeks.',
       lessonsLearned: 'The most valuable AI interventions were those that preserved user agency—suggesting rather than altering—and latency under 300ms was critical for maintaining the flow state.'
     },
@@ -179,11 +160,8 @@ export const projects: Project[] = [
       { label: 'Mean Time to Detect', value: '4.2 min' }
     ],
     buttons: [
-      { label: 'GitHub Repository', href: 'https://github.com/yourusername/self-healing-code', external: true },
-      { label: 'Live Demo', href: '#', external: false },
-      { label: 'Read Documentation', href: '/docs/self-healing-code', external: false }
-    ],
-    styleVariant: 'selfhealing'
+      { label: 'GitHub Repository', href: '+,
+    ]
   },
   {
     id: 'gaming-website',
@@ -197,7 +175,7 @@ export const projects: Project[] = [
       approach: 'Using a git-based backend with LFS for large assets, we implemented a reputation system that weights contributions by community feedback and download metrics to surface high-quality mods.',
       pipeline: 'Mod submissions undergo automated scanning for malware and copyright violations, followed by metadata extraction and dependency resolution before being made available for download.',
       architecture: 'A hybrid approach combines centralized metadata storage for search and discovery with decentralized content delivery via IPFS to ensure availability and reduce bandwidth costs.',
-      results: 'The platform facilitated 2.1M mod downloads in Q1 2024, with top creators earning an average of $850/month and 92% of users reporting easier mod discovery compared to traditional methods.',
+      results: 'The platform facilitated 2.1M mod downloads in Q1 2024, with top creators earning an average of $850/month and 92% reporting easier mod discovery compared to traditional methods.',
       lessonsLearned: 'Community moderation scales better than centralized approval when paired with clear guidelines and reputation-based privileges, and seamless installation is the ultimate gateway drug for adoption.'
     },
     techStack: [
@@ -205,19 +183,7 @@ export const projects: Project[] = [
       'TypeScript',
       'PostgreSQL',
       'IPFS',
-      'Redis',
-      'Docker',
-      'AWS Elastic Beanstalk',
-      'Unity SDK',
-      'Unreal Engine Plugin',
-      'Stripe Connect'
-    ],
-    metrics: [
-      { label: 'Mod Creators', value: '15K+' },
-      { label: 'Total Downloads', value: '2.1M' },
-      { label: 'Avg. Creator Earnings', value: '$850/mo' },
-      { label: 'Malware Detection Rate', value: '99.8%' },
-      { label: 'Avg. Install Time', value: '45 sec' }
+      'Redid
     ],
     buttons: [
       { label: 'GitHub Repository', href: 'https://github.com/yourusername/pixelforge', external: true },

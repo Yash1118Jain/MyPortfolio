@@ -1,0 +1,1 @@
+export const leadership = "Senior AI Engineer with a track record of building applied ML systems and launching product-grade experiences.";
